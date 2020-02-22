@@ -63,7 +63,6 @@ class naverreader():
                 print(code)
                 num_code = short_code[1:]
                 super_list.append(self.get_adj_naver_list(num_code, count=days))
-                if i==3: break
             except KeyError:
                 pass
 
@@ -73,7 +72,7 @@ class naverreader():
         linked[['open', 'high', 'low', 'close', 'volume']] = linked[
             ['open', 'high', 'low', 'close', 'volume']].applymap(lambda x: int(x))
         linked.set_index('date', inplace=True)
-
+        linked.to_pickle('../Database/10year.pickle')
         return linked
 
     def get_current_price(self):

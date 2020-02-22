@@ -4,7 +4,7 @@ from strategy_ma import strategy_ma
 
 stra = strategy_ma(30, 120, 60, 3000)
 try:
-    result = stra.run('20200212')
+    result = stra.run('20200222')
 except Exception as e:
     print(e)
 

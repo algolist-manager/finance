@@ -119,13 +119,15 @@ class strategy_ma(strategy):
         order.fillna(0, inplace=True)
         return order
 
-    def get_order_for_exe(self, company_num, capital): ## company_num은 투자할 상위 종목 수, capital은 투자액
-        trade_day = pd.to_datetime(datetime.today().strftime('%Y%m%d'))
+    def get_order_for_exe(self, company_num, capital, trade_day): ## company_num은 투자할 상위 종목 수, capital은 투자액
+        trade_day = [pd.to_datetime(trade_day)]*company_num
+        #pd.to_datetime(datetime.today().strftime('%Y%m%d'))
         short_codes = list(self.result['short_code'].iloc[:company_num])
         codenames = list(self.result['codeName'].iloc[:company_num])
-        prices = stra.price_data[stra.price_data['short_code'].isin(short_codes)].loc[trade_day][
+        prices = self.price_data[self.price_data['short_code'].isin(short_codes)].loc[trade_day[0]][
             'close']  ## 12시 전에 돌리면 today고 아니면 today-timedelta(days=1)
-        quantities = (capital / company_num / prices).apply(lambda x: int(x))
+        quantities = (capital / company_num) / prices
+        quantities = quantities.apply(lambda x: int(x))
         order = pd.DataFrame([trade_day, short_codes, prices, quantities], columns=codenames,
                              index=['date', 'short_code', 'price', 'quantity'])
         order.loc['date'] = trade_day
